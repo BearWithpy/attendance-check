@@ -6,4 +6,5 @@ ENV spring_profile=${SPRING_PROFILE}
 ENTRYPOINT java -jar app.jar \
             --spring.profiles.active=${spring_profile}
 
+EXPOSE 9989
 #ENTRYPOINT ["java", "-jar", "app.jar"]
