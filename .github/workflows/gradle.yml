@@ -53,4 +53,4 @@ jobs:
         run: docker rm -f attendance-check-logic-container
 
       - name: Run docker container
-        run: docker run -d -p 80:9989 --name attendance-check-logic-container pks5294/attendance-check-logic:latest
+        run: docker run -d -p 9989:9989 --name attendance-check-logic-container pks5294/attendance-check-logic:latest
