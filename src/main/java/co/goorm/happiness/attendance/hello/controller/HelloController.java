@@ -1,4 +1,4 @@
-package co.goorm.happiness.hello.controller;
+package co.goorm.happiness.attendance.hello.controller;
 
 
 import co.goorm.happiness.attendance.response.AttendanceResponse;
@@ -13,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class HelloController {
+
     @GetMapping("/")
     public ResponseEntity<?> helloWorld() {
-        try{
 
+        return ResponseEntity.ok(new AttendanceResponse<>(200,"HELLO MY FRIEND"));
 
-            return ResponseEntity.ok(new AttendanceResponse<>(200,"HELLO MY FRIEND"));
-        } catch (Exception e) {
-            log.error("An unexpected error occurred", e);
-            return ResponseEntity.status(500).body("An unexpected error occurred");
-        }
     }
 }
