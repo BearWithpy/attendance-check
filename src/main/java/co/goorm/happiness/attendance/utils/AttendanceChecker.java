@@ -98,20 +98,20 @@ public class AttendanceChecker {
 
 
             // 지금의 룰... 2교시부터 7교시까지는....
-//            for (int i = 1; i < checkList.length - 1; i++) {
-//                if (checkList[i] != 1) {
-//                    checkList[i] = 1;
-//                }
-//            }
+            for (int i = 1; i < checkList.length - 1; i++) {
+                if (checkList[i] != 1) {
+                    checkList[i] = 1;
+                }
+            }
 
             // 추가 결석 로직
             long countOf5 = Arrays.stream(checkList).filter(value -> value == 5).count();
-            if (countOf5 >= 5) {
-                Arrays.fill(checkList, 5);
-            }
-            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
-                Arrays.fill(checkList, 5);
-            }
+//            if (countOf5 >= 5) {
+//                Arrays.fill(checkList, 5);
+//            }
+//            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
+//                Arrays.fill(checkList, 5);
+//            }
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
             }
