@@ -9,13 +9,18 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
 @Slf4j
 @Component
 public class AttendanceChecker {
+
+    private static final List<String> EXCLUDED_KEYS = Arrays.asList("사용자 이메일", "게스트", "대기실");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 10), LocalTime.of(10, 50)),
@@ -37,6 +42,13 @@ public class AttendanceChecker {
             String id = participant.getId();
             Integer[] checkList;
 
+
+            if (EXCLUDED_NAMES.contains(name)) {
+                log.info("Excluded name: {}", name);
+                continue;
+            }
+
+
             String participantKey = name + id;
 
             if (processedRecords.containsKey(participantKey)) {
@@ -49,6 +61,8 @@ public class AttendanceChecker {
 
             for (int i = 0; i < CLASS_SESSIONS.size(); i++) {
                 LocalDateTimeRange classSession = CLASS_SESSIONS.get(i);
+//                log.info(">>>>>>>>>>>>>" + participant.getJoinTime().toLocalTime());
+//                log.info(String.valueOf(participant.getJoinTime().toLocalTime().isBefore(classSession.getStartTime())));
 
                 if (checkList[i] == -99) {
                     if (participant.getJoinTime().toLocalTime().isBefore(classSession.getStartTime()) &&
@@ -81,11 +95,23 @@ public class AttendanceChecker {
             // 존재하지 않는 경우에만 추가
             if (!updated) {
                 result.add(AttendanceCheckDto.builder()
+                        .id(id)
                         .name(preprocessName(name))
                         .checkList(checkList)
                         .build());
             }
+
+//            if (!EXCLUDED_NAMES.contains(preprocessName(name))) {
+//                // Your existing processing logic...
+//                if (!updated) {
+//                    result.add(AttendanceCheckDto.builder()
+//                            .name(preprocessName(name))
+//                            .checkList(checkList)
+//                            .build());
+//                }
+//            }
         }
+
 
         for (AttendanceCheckDto dto : result) {
             Integer[] checkList = dto.getCheckList();
@@ -98,20 +124,21 @@ public class AttendanceChecker {
 
 
             // 지금의 룰... 2교시부터 7교시까지는....
-            for (int i = 1; i < checkList.length - 1; i++) {
-                if (checkList[i] != 1) {
-                    checkList[i] = 1;
-                }
-            }
+//            for (int i = 1; i < checkList.length - 1; i++) {
+//                if (checkList[i] != 1) {
+//                    checkList[i] = 1;
+//                }
+//            }
 
             // 추가 결석 로직
             long countOf5 = Arrays.stream(checkList).filter(value -> value == 5).count();
 //            if (countOf5 >= 5) {
 //                Arrays.fill(checkList, 5);
 //            }
-//            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
-//                Arrays.fill(checkList, 5);
-//            }
+
+            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
+                Arrays.fill(checkList, 5);
+            }
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
             }

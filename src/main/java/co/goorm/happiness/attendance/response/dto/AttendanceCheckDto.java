@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class AttendanceCheckDto {
 
-//    private String id;
+    private String id;
 
     private String name;
 
