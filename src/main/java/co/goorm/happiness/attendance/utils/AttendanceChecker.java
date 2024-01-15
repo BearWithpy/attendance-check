@@ -20,7 +20,7 @@ import java.util.*;
 public class AttendanceChecker {
 
     private static final List<String> EXCLUDED_KEYS = Arrays.asList("사용자 이메일", "게스트", "대기실");
-    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 10), LocalTime.of(10, 50)),
@@ -30,7 +30,7 @@ public class AttendanceChecker {
             new LocalDateTimeRange(LocalTime.of(15, 10), LocalTime.of(15, 50)),
             new LocalDateTimeRange(LocalTime.of(16, 10), LocalTime.of(16, 50)),
             new LocalDateTimeRange(LocalTime.of(17, 10), LocalTime.of(17, 50)),
-            new LocalDateTimeRange(LocalTime.of(18, 10), LocalTime.of(18, 49))
+            new LocalDateTimeRange(LocalTime.of(18, 10), LocalTime.of(18, 50))
     );
 
     public List<AttendanceCheckDto> attendanceCheck(List<ParticipantDto> data) {
