@@ -18,8 +18,6 @@ import java.util.*;
 @Slf4j
 @Component
 public class AttendanceChecker {
-
-    private static final List<String> EXCLUDED_KEYS = Arrays.asList("사용자 이메일", "게스트", "대기실");
     private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
@@ -34,8 +32,10 @@ public class AttendanceChecker {
     );
 
     public List<AttendanceCheckDto> attendanceCheck(List<ParticipantDto> data) {
+
         List<AttendanceCheckDto> result = new ArrayList<>();
         Map<String, Integer[]> processedRecords = new HashMap<>();
+
 
         for (ParticipantDto participant : data) {
             String name = participant.getName();
@@ -113,6 +113,7 @@ public class AttendanceChecker {
         }
 
 
+
         for (AttendanceCheckDto dto : result) {
             Integer[] checkList = dto.getCheckList();
 
@@ -132,9 +133,9 @@ public class AttendanceChecker {
 
             // 추가 결석 로직
             long countOf5 = Arrays.stream(checkList).filter(value -> value == 5).count();
-//            if (countOf5 >= 5) {
-//                Arrays.fill(checkList, 5);
-//            }
+            if (countOf5 >= 5) {
+                Arrays.fill(checkList, 5);
+            }
 
             if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
@@ -144,6 +145,7 @@ public class AttendanceChecker {
             }
         }
 
+        result.sort(Comparator.comparing(AttendanceCheckDto::getName));
         return result;
     }
 
