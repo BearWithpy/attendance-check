@@ -17,6 +17,7 @@ public class ParticipantDto {
     @Id
     private String id;
 
+    @JsonProperty("user_name")
     private String name;
     private Integer duration;
     @JsonProperty("join_time")

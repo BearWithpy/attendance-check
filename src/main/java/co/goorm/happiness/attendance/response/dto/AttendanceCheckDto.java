@@ -18,6 +18,7 @@ public class AttendanceCheckDto {
 
     private String name;
 
+
     private Integer[] checkList = new Integer[8];
 
 }
