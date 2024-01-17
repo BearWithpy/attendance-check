@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,7 @@ public class HelloController {
 
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/example")
     public ResponseEntity<?> sendExample() throws JsonProcessingException {
         List<AttendanceCheckDto> people = new ArrayList<>();
