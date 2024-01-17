@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -29,45 +31,51 @@ public class HelloController {
 
     @GetMapping("/example")
     public ResponseEntity<?> sendExample() throws JsonProcessingException {
+        List<AttendanceCheckDto> people = new ArrayList<>();
+        Integer[] example1;
+        Integer[] example2;
 
-        String exampleData = """
-          {
-            "status": 200,
-            "data": [
-                {
-                    id: "",
-                    name: "김주원",
-                    checkList: [5, 5, 5, 5, 5, 5, 5, 5]
-                },
-                {
-                    id: "",
-                    name: "송민선",
-                    checkList: [5, 5, 5, 5, 5, 5, 5, 5]
-                },
-                {
-                    id: "",
-                    name: "심재원",
-                    checkList: [5, 5, 5, 5, 5, 5, 5, 5]
-                },
-                {
-                    id: "",
-                    name: "이재현",
-                    checkList: [5, 5, 5, 5, 5, 5, 5, 5]
-                },
-                {
-                    id: "",
-                    name: "정성진",
-                    checkList: [5, 5, 5, 5, 5, 5, 5, 5]
-                }
-            ]
-        }
-        """;
+        List<Integer> list = Arrays.asList(5, 5, 5, 5, 5, 5, 5, 5);
+        example1 = list.toArray(new Integer[0]);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        list = Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1);
+        example2 = list.toArray(new Integer[0]);
 
-        // Deserialize into an array of AttendanceCheckDto
-        AttendanceCheckDto[] people = objectMapper.readValue(exampleData, AttendanceCheckDto[].class);
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("양재선")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("김수연")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("최윤석")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("윤창호")
+                .checkList(example1)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("이재현98")
+                .checkList(example1)
+                .build());
 
         return ResponseEntity.ok(new AttendanceResponse<>(200, people));
 
