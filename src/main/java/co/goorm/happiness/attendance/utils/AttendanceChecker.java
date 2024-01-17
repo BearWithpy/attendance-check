@@ -49,11 +49,12 @@ public class AttendanceChecker {
             }
 
 
-            String participantKey = name + id;
+            // id 값이 빈값으로 와용.....;;;;;;
+//            String participantKey = name + id;
 
-            if (processedRecords.containsKey(participantKey)) {
+            if (processedRecords.containsKey(name)) {
                 log.info("나왔던 이름입니다.");
-                checkList = processedRecords.get(participantKey);
+                checkList = processedRecords.get(name);
             } else {
                 checkList = new Integer[8];
                 Arrays.fill(checkList, -99);
@@ -61,16 +62,18 @@ public class AttendanceChecker {
 
             for (int i = 0; i < CLASS_SESSIONS.size(); i++) {
                 LocalDateTimeRange classSession = CLASS_SESSIONS.get(i);
-//                log.info(">>>>>>>>>>>>>" + participant.getJoinTime().toLocalTime());
-//                log.info(String.valueOf(participant.getJoinTime().toLocalTime().isBefore(classSession.getStartTime())));
+
+                // 한국 시차 적용
+                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(9);
+                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(9);
 
                 if (checkList[i] == -99) {
-                    if (participant.getJoinTime().toLocalTime().isBefore(classSession.getStartTime()) &&
-                            participant.getLeaveTime().toLocalTime().isAfter(classSession.getEndTime())) {
+                    if (adjustedJoinTime.toLocalTime().isBefore(classSession.getStartTime()) &&
+                            adjustedLeaveTime.toLocalTime().isAfter(classSession.getEndTime())) {
                         checkList[i] = AttendanceStatus.ATTENDANCE.getCode();
-                    } else if (participant.getJoinTime().toLocalTime().isAfter(classSession.getStartTime()) &&
-                            participant.getJoinTime().toLocalTime().isBefore(classSession.getEndTime()) &&
-                            participant.getLeaveTime().toLocalTime().isAfter(classSession.getEndTime())) {
+                    } else if (adjustedJoinTime.toLocalTime().isAfter(classSession.getStartTime()) &&
+                            adjustedJoinTime.toLocalTime().isBefore(classSession.getEndTime()) &&
+                            adjustedLeaveTime.toLocalTime().isAfter(classSession.getEndTime())) {
                         checkList[i] = AttendanceStatus.LATE.getCode();
                         if (i > 0 && Objects.equals(checkList[i - 1], AttendanceStatus.LATE.getCode())) {
                             checkList[i - 1] = AttendanceStatus.ABSENT.getCode();
@@ -80,7 +83,7 @@ public class AttendanceChecker {
             }
 
             // 이미 처리된 참가자에 대한 정보를 맵에 저장
-            processedRecords.put(participantKey, checkList);
+            processedRecords.put(name, checkList);
 
             // 결과 리스트에 추가하기 전에 이미 존재하는 경우 수정
             boolean updated = false;
@@ -113,7 +116,6 @@ public class AttendanceChecker {
         }
 
 
-
         for (AttendanceCheckDto dto : result) {
             Integer[] checkList = dto.getCheckList();
 
@@ -125,21 +127,31 @@ public class AttendanceChecker {
 
 
             // 지금의 룰... 2교시부터 7교시까지는....
-//            for (int i = 1; i < checkList.length - 1; i++) {
-//                if (checkList[i] != 1) {
-//                    checkList[i] = 1;
-//                }
-//            }
+            for (int i = 1; i < checkList.length - 1; i++) {
+                if (checkList[i] != 1) {
+                    checkList[i] = 1;
+                }
+
+            }
+            // 1교시 결석도....
+            if (checkList[0] == 5){
+                checkList[0] = 2;
+            }
+            // 8교시 지각도....
+            if (checkList[7] == 2){
+                checkList[7] = 1;
+            }
 
             // 추가 결석 로직
-            long countOf5 = Arrays.stream(checkList).filter(value -> value == 5).count();
-            if (countOf5 >= 5) {
-                Arrays.fill(checkList, 5);
-            }
+//            long countOf5 = Arrays.stream(checkList).filter(value -> value == 5).count();
+//            if (countOf5 >= 5) {
+//                Arrays.fill(checkList, 5);
+//            }
 
-            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
-                Arrays.fill(checkList, 5);
-            }
+//            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
+//                Arrays.fill(checkList, 5);
+//            }
+
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
             }
