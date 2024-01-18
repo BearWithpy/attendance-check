@@ -35,7 +35,14 @@ class AttendanceCheckerTest {
                 .leaveTime(OffsetDateTime.parse("2024-01-15T09:50:11Z").toLocalDateTime())
                 .id("")
                 .build();
-        people.add(example);
+//
+//        ParticipantDto example = ParticipantDto.builder()
+//                .name("박준수")
+//                .joinTime(OffsetDateTime.parse("2024-01-15T01:09:11Z").toLocalDateTime())
+//                .leaveTime(OffsetDateTime.parse("2024-01-15T09:50:11Z").toLocalDateTime())
+//                .id("")
+//                .build();
+//        people.add(example);
 
         Assertions.assertThat(attendanceChecker.attendanceCheck(people).get(0).getCheckList())
                 .isEqualTo(new Integer[]{1, 1, 1, 1, 1, 1, 1, 1});
