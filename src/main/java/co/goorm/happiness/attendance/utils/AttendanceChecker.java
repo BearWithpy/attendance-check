@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 @Component
 public class AttendanceChecker {
-    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc", "출결관리자");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 11), LocalTime.of(10, 50)),
@@ -43,7 +43,7 @@ public class AttendanceChecker {
             Integer[] checkList;
 
 
-            if (EXCLUDED_NAMES.contains(name)) {
+            if (EXCLUDED_NAMES.contains(preprocessName(name)) || EXCLUDED_NAMES.contains(name)) {
                 log.info("Excluded name: {}", name);
                 continue;
             }
@@ -75,12 +75,15 @@ public class AttendanceChecker {
                             adjustedJoinTime.toLocalTime().isBefore(classSession.getEndTime()) &&
                             adjustedLeaveTime.toLocalTime().isAfter(classSession.getEndTime())) {
                         checkList[i] = AttendanceStatus.LATE.getCode();
+
                         if (i > 0 && Objects.equals(checkList[i - 1], AttendanceStatus.LATE.getCode())) {
                             checkList[i - 1] = AttendanceStatus.ABSENT.getCode();
                         }
                     }
                 }
+//                log.info(">>>>>>>>>>{}", checkList[i]);
             }
+//            log.info("\n\n");
 
             // 이미 처리된 참가자에 대한 정보를 맵에 저장
             processedRecords.put(name, checkList);
@@ -95,24 +98,12 @@ public class AttendanceChecker {
                 }
             }
 
-            // 존재하지 않는 경우에만 추가
             if (!updated) {
                 result.add(AttendanceCheckDto.builder()
-                        .id(id)
                         .name(preprocessName(name))
                         .checkList(checkList)
                         .build());
             }
-
-//            if (!EXCLUDED_NAMES.contains(preprocessName(name))) {
-//                // Your existing processing logic...
-//                if (!updated) {
-//                    result.add(AttendanceCheckDto.builder()
-//                            .name(preprocessName(name))
-//                            .checkList(checkList)
-//                            .build());
-//                }
-//            }
         }
 
 
@@ -124,6 +115,7 @@ public class AttendanceChecker {
                     checkList[i] = 5;
                 }
             }
+            log.info("{}{}{}{}{}{}{}{}", checkList[0], checkList[1], checkList[2], checkList[3], checkList[4], checkList[5], checkList[6], checkList[7]);
 
 
             // 지금의 룰... 2교시부터 7교시까지는....
@@ -131,14 +123,13 @@ public class AttendanceChecker {
                 if (checkList[i] != 1) {
                     checkList[i] = 1;
                 }
-
             }
             // 1교시 결석도....
-            if (checkList[0] == 5){
+            if (checkList[0] == 5) {
                 checkList[0] = 2;
             }
             // 8교시 지각도....
-            if (checkList[7] == 2){
+            if (checkList[7] == 2) {
                 checkList[7] = 1;
             }
 
@@ -155,6 +146,9 @@ public class AttendanceChecker {
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
             }
+            log.info(">>>>>>>>>>{}{}{}{}{}{}{}{}", checkList[0], checkList[1], checkList[2], checkList[3], checkList[4], checkList[5], checkList[6], checkList[7]);
+
+
         }
 
         result.sort(Comparator.comparing(AttendanceCheckDto::getName));
