@@ -26,7 +26,7 @@ public class HelloController {
     @GetMapping("/")
     public ResponseEntity<?> helloWorld() {
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200,"HELLO MY FRIEND"));
+        return ResponseEntity.ok(new AttendanceResponse<>(200,0,"HELLO MY FRIEND"));
 
     }
 
@@ -79,7 +79,7 @@ public class HelloController {
                 .checkList(example1)
                 .build());
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200, people));
+        return ResponseEntity.ok(new AttendanceResponse<>(200, 6, people));
 
     }
 }

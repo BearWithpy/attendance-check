@@ -35,7 +35,7 @@ public class AttendanceController {
         List<ParticipantDto> people = request.getParticipants();
         List<AttendanceCheckDto> attendanceCheck = attendanceService.checkAttendance(people);
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200, attendanceCheck, attendanceCheck.size()));
+        return ResponseEntity.ok(new AttendanceResponse<>(200, attendanceCheck.size(), attendanceCheck ));
     }
 
     @GetMapping("/json")
@@ -43,7 +43,7 @@ public class AttendanceController {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(CSV_FILE_PATH)) {
 
             List<ParticipantDto> jsonResult =  attendanceService.csvToJson(inputStream);
-            return ResponseEntity.ok(new AttendanceResponse<>(200, jsonResult, 0));
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);
             return ResponseEntity.status(500).body("An unexpected error occurred");
@@ -59,7 +59,7 @@ public class AttendanceController {
             file.transferTo(new File(destinationPath));
 
             List<ParticipantDto> jsonResult = attendanceService.csvToJson(destinationPath);
-            return ResponseEntity.ok(new AttendanceResponse<>(200, jsonResult,0));
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
 
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);
