@@ -88,7 +88,7 @@ class AttendanceCheckerTest {
         ParticipantDto example3 = ParticipantDto.builder()
                 .name("박준수")
                 .joinTime(OffsetDateTime.parse("2024-01-15T09:45:59Z").toLocalDateTime())
-                .leaveTime(OffsetDateTime.parse("2024-01-15T09:50:11Z").toLocalDateTime())
+                .leaveTime(OffsetDateTime.parse("2024-01-15T09:48:11Z").toLocalDateTime())
                 .id("")
                 .build();
         people.add(example);
