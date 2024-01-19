@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -29,20 +30,20 @@ public class AttendanceController {
     private static final String CSV_FILE_PATH = "participants_84143883166.csv";
 
     @PostMapping("/data/meeting")
-    public ResponseEntity<?> processData(@RequestBody AttendanceDataRequestDto request){
+    public ResponseEntity<?> processData(@RequestBody AttendanceDataRequestDto request) {
 
         List<ParticipantDto> people = request.getParticipants();
         List<AttendanceCheckDto> attendanceCheck = attendanceService.checkAttendance(people);
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200, attendanceCheck.size(), attendanceCheck ));
+        return ResponseEntity.ok(new AttendanceResponse<>(200, attendanceCheck.size(), people.get(0).getLeaveTime().toLocalDate(), attendanceCheck));
     }
 
     @GetMapping("/json")
     public ResponseEntity<?> csvToJson() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(CSV_FILE_PATH)) {
 
-            List<ParticipantDto> jsonResult =  attendanceService.csvToJson(inputStream);
-            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
+            List<ParticipantDto> jsonResult = attendanceService.csvToJson(inputStream);
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, LocalDate.now(), jsonResult));
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);
             return ResponseEntity.status(500).body("An unexpected error occurred");
@@ -58,7 +59,7 @@ public class AttendanceController {
             file.transferTo(new File(destinationPath));
 
             List<ParticipantDto> jsonResult = attendanceService.csvToJson(destinationPath);
-            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, LocalDate.now(), jsonResult));
 
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);
@@ -75,7 +76,7 @@ public class AttendanceController {
             file.transferTo(new File(destinationPath));
 
             List<ParticipantDto> jsonResult = attendanceService.csvToJsonAMPM(destinationPath);
-            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, LocalDate.now(), jsonResult));
 
         } catch (Exception e) {
             log.error("An unexpected error occurred", e);

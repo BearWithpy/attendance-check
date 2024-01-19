@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 @Component
 public class AttendanceChecker {
-    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc", "출결관리자");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc", "pc접속", "출결관리자");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 11), LocalTime.of(10, 50)),
@@ -63,9 +63,13 @@ public class AttendanceChecker {
             for (int i = 0; i < CLASS_SESSIONS.size(); i++) {
                 LocalDateTimeRange classSession = CLASS_SESSIONS.get(i);
 
-                // 한국 시차 적용
+                // 한국 시차 적용 - UTC의 경우
                 LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(9);
                 LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(9);
+
+                // 한국
+//                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(0);
+//                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(0);
 
                 if (checkList[i] == -99) {
                     if (adjustedJoinTime.toLocalTime().isBefore(classSession.getStartTime()) &&
