@@ -64,8 +64,8 @@ public class AttendanceChecker {
                 LocalDateTimeRange classSession = CLASS_SESSIONS.get(i);
 
                 // 한국 시차 적용
-                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(9);
-                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(9);
+                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(0);
+                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(0);
 
                 if (checkList[i] == -99) {
                     if (adjustedJoinTime.toLocalTime().isBefore(classSession.getStartTime()) &&
@@ -142,6 +142,7 @@ public class AttendanceChecker {
 //            if (checkList[0] == 5 && checkList[checkList.length - 1] == 5) {
 //                Arrays.fill(checkList, 5);
 //            }
+
 
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);

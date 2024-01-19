@@ -5,6 +5,7 @@ import co.goorm.happiness.attendance.response.dto.AttendanceCheckDto;
 import co.goorm.happiness.attendance.response.dto.ParticipantDto;
 import co.goorm.happiness.attendance.utils.AttendanceChecker;
 import co.goorm.happiness.attendance.utils.CsvConverter;
+import co.goorm.happiness.attendance.utils.CsvConverterAMPM;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class AttendanceService {
     private final CsvConverter csvConverter;
+    private final CsvConverterAMPM csvConverterAmpm;
     private final AttendanceChecker attendanceChecker;
 
     public List<AttendanceCheckDto> checkAttendance(List<ParticipantDto> rawData) {
@@ -53,11 +55,33 @@ public class AttendanceService {
         }
     }
 
+    public List<ParticipantDto> csvToJsonAMPM(String filePath) {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8)) {
+            return getParticipantDtosAMPM(reader);
+        } catch (IOException e) {
+            throw new RuntimeException("Something Wrong... I/O");
+        }
+    }
+
+
     private List<ParticipantDto> getParticipantDtos(InputStreamReader reader) throws IOException {
         List<String> csvRows = new BufferedReader(reader).lines().collect(Collectors.toList());
         if (!csvRows.isEmpty()) {
             try {
                 return csvConverter.fromCsvToJson(csvRows);
+            } catch (JsonProcessingException e) {
+                log.error("Error converting CSV to JSON", e);
+                throw new IOException("Error converting CSV to JSON", e);
+            }
+        }
+        throw new IOException("CSV file is empty");
+    }
+
+    private List<ParticipantDto> getParticipantDtosAMPM(InputStreamReader reader) throws IOException {
+        List<String> csvRows = new BufferedReader(reader).lines().collect(Collectors.toList());
+        if (!csvRows.isEmpty()) {
+            try {
+                return csvConverterAmpm.fromCsvToJson(csvRows);
             } catch (JsonProcessingException e) {
                 log.error("Error converting CSV to JSON", e);
                 throw new IOException("Error converting CSV to JSON", e);

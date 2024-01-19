@@ -5,7 +5,6 @@ import co.goorm.happiness.attendance.response.AttendanceResponse;
 import co.goorm.happiness.attendance.response.dto.AttendanceCheckDto;
 import co.goorm.happiness.attendance.response.dto.ParticipantDto;
 import co.goorm.happiness.attendance.service.AttendanceService;
-import co.goorm.happiness.attendance.utils.CsvConverter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +58,23 @@ public class AttendanceController {
             file.transferTo(new File(destinationPath));
 
             List<ParticipantDto> jsonResult = attendanceService.csvToJson(destinationPath);
+            return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
+
+        } catch (Exception e) {
+            log.error("An unexpected error occurred", e);
+            return ResponseEntity.status(500).body("An unexpected error occurred");
+        }
+    }
+
+    @PostMapping("/jsonampm")
+    public ResponseEntity<?> csvToJsonExternalAMPM(@RequestParam("file") MultipartFile file) throws IOException {
+        try {
+
+            String resourcePath = resourceLoader.getResource("classpath:data/").getURI().getPath();
+            String destinationPath = resourcePath + file.getOriginalFilename();
+            file.transferTo(new File(destinationPath));
+
+            List<ParticipantDto> jsonResult = attendanceService.csvToJsonAMPM(destinationPath);
             return ResponseEntity.ok(new AttendanceResponse<>(200, 0, jsonResult));
 
         } catch (Exception e) {
