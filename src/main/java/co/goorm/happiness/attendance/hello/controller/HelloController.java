@@ -80,7 +80,177 @@ public class HelloController {
                 .checkList(example1)
                 .build());
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200, 6, LocalDate.now(), people));
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+        people.add(AttendanceCheckDto.builder()
+                .id("")
+                .name("박준수")
+                .checkList(example2)
+                .build());
+
+
+        return ResponseEntity.ok(new AttendanceResponse<>(200, 999, LocalDate.now(), people));
 
     }
 }
