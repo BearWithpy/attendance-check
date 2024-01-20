@@ -41,7 +41,7 @@ public class HelloController {
         List<Integer> list = Arrays.asList(5, 5, 5, 5, 5, 5, 5, 5);
         example1 = list.toArray(new Integer[0]);
 
-        list = Arrays.asList(1, 1, 1, 1, 1, 1, 1, 1);
+        list = Arrays.asList(2, 1, 1, 1, 1, 1, 1, 1);
         example2 = list.toArray(new Integer[0]);
 
         people.add(AttendanceCheckDto.builder()
