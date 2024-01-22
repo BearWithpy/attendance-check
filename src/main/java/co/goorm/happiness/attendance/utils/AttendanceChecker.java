@@ -85,9 +85,15 @@ public class AttendanceChecker {
                         }
                     }
                 }
-//                log.info(">>>>>>>>>>{}", checkList[i]);
+
+                // 1교시 스크린샷 후, 바로 나가기...
+                if (i == 0 &&
+                        adjustedJoinTime.toLocalTime().isBefore(LocalTime.of(10, 10)) &&
+                        adjustedLeaveTime.toLocalTime().isAfter(LocalTime.of(10, 10))) {
+                    checkList[i] = AttendanceStatus.ATTENDANCE.getCode();
+                }
             }
-//            log.info("\n\n");
+
 
             // 이미 처리된 참가자에 대한 정보를 맵에 저장
             processedRecords.put(name, checkList);

@@ -63,6 +63,24 @@ class AttendanceCheckerTest {
     }
 
 
+    @Test
+    @DisplayName("1교시 닌자들")
+    void checkFirstTime() {
+
+        List<ParticipantDto> people = new ArrayList<>();
+        ParticipantDto example = ParticipantDto.builder()
+                .name("박준수")
+                .joinTime(OffsetDateTime.parse("2024-01-15T01:09:59Z").toLocalDateTime())
+                .leaveTime(OffsetDateTime.parse("2024-01-15T01:10:11Z").toLocalDateTime())
+                .id("")
+                .build();
+        people.add(example);
+
+
+        Assertions.assertThat(attendanceChecker.attendanceCheck(people).get(0).getCheckList())
+                .isEqualTo(new Integer[]{1, 1, 1, 1, 1, 1, 1, 5});
+    }
+
 
 
     @Test
@@ -72,18 +90,18 @@ class AttendanceCheckerTest {
         List<ParticipantDto> people = new ArrayList<>();
         ParticipantDto example = ParticipantDto.builder()
                 .name("박준수")
-                .joinTime(OffsetDateTime.parse("2024-01-15T01:08:59Z").toLocalDateTime())
-                .leaveTime(OffsetDateTime.parse("2024-01-15T01:10:11Z").toLocalDateTime())
+                .joinTime(OffsetDateTime.parse("2024-01-15T01:11:59Z").toLocalDateTime())
+                .leaveTime(OffsetDateTime.parse("2024-01-15T01:30:11Z").toLocalDateTime())
                 .id("")
                 .build();
-        people.add(example);
+
         ParticipantDto example2 = ParticipantDto.builder()
                 .name("박준수")
                 .joinTime(OffsetDateTime.parse("2024-01-15T02:14:59Z").toLocalDateTime())
                 .leaveTime(OffsetDateTime.parse("2024-01-15T03:19:11Z").toLocalDateTime())
                 .id("")
                 .build();
-        people.add(example);
+
 
         ParticipantDto example3 = ParticipantDto.builder()
                 .name("박준수")
@@ -94,7 +112,6 @@ class AttendanceCheckerTest {
         people.add(example);
         people.add(example2);
         people.add(example3);
-
 
 
         Assertions.assertThat(attendanceChecker.attendanceCheck(people).get(0).getCheckList())
