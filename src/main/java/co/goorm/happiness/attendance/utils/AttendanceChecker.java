@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 @Component
 public class AttendanceChecker {
-    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "pc", "pc접속", "출결관리자", "k-digitalgoorm");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC",  "Pc", "pc", "pc접속", "출결관리자", "k-digitalgoorm");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 11), LocalTime.of(10, 50)),
