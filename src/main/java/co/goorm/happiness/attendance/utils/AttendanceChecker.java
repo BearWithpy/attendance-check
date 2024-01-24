@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 @Component
 public class AttendanceChecker {
-    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC",  "Pc", "pc", "pc접속", "출결관리자", "k-digitalgoorm");
+    private static final List<String> EXCLUDED_NAMES = Arrays.asList("구름", "코치", "관리자", "구름관리자", "goorm", "Goorm", "GOORM", "PC", "Pc", "pc", "pc접속", "출결관리자", "k-digitalgoorm");
 
     private static final List<LocalDateTimeRange> CLASS_SESSIONS = Arrays.asList(
             new LocalDateTimeRange(LocalTime.of(10, 11), LocalTime.of(10, 50)),
@@ -52,9 +52,9 @@ public class AttendanceChecker {
             // id 값이 빈값으로 와용.....;;;;;;
 //            String participantKey = name + id;
 
-            if (processedRecords.containsKey(name)) {
+            if (processedRecords.containsKey(preprocessName(name))) {
                 log.info("나왔던 이름입니다.");
-                checkList = processedRecords.get(name);
+                checkList = processedRecords.get(preprocessName(name));
             } else {
                 checkList = new Integer[8];
                 Arrays.fill(checkList, -99);
@@ -64,12 +64,12 @@ public class AttendanceChecker {
                 LocalDateTimeRange classSession = CLASS_SESSIONS.get(i);
 
                 // 한국 시차 적용 - UTC의 경우
-                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(9);
-                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(9);
+//                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(9);
+//                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(9);
 
                 // 한국
-//                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(0);
-//                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(0);
+                LocalDateTime adjustedJoinTime = participant.getJoinTime().plusHours(0);
+                LocalDateTime adjustedLeaveTime = participant.getLeaveTime().plusHours(0);
 
                 if (checkList[i] == -99) {
                     if (adjustedJoinTime.toLocalTime().isBefore(classSession.getStartTime()) &&
@@ -90,6 +90,11 @@ public class AttendanceChecker {
                 if (i == 0 &&
                         adjustedJoinTime.toLocalTime().isBefore(LocalTime.of(10, 10)) &&
                         adjustedLeaveTime.toLocalTime().isAfter(LocalTime.of(10, 10))) {
+                    checkList[i] = AttendanceStatus.ATTENDANCE.getCode();
+                }
+                if (i == 7 &&
+                        adjustedJoinTime.toLocalTime().isBefore(LocalTime.of(18, 50)) &&
+                        adjustedLeaveTime.toLocalTime().isAfter(LocalTime.of(18, 50))) {
                     checkList[i] = AttendanceStatus.ATTENDANCE.getCode();
                 }
             }
@@ -119,6 +124,7 @@ public class AttendanceChecker {
 
         for (AttendanceCheckDto dto : result) {
             Integer[] checkList = dto.getCheckList();
+            String name = dto.getName();
 
             for (int i = 0; i < checkList.length; i++) {
                 if (checkList[i] == -99) {
@@ -157,7 +163,7 @@ public class AttendanceChecker {
             if (checkList[0] == 2 && checkList[checkList.length - 1] == 5) {
                 Arrays.fill(checkList, 5);
             }
-            log.info(">>>>>>>>>>{}{}{}{}{}{}{}{}", checkList[0], checkList[1], checkList[2], checkList[3], checkList[4], checkList[5], checkList[6], checkList[7]);
+            log.info("{} >>>>>>>>>>{}{}{}{}{}{}{}{}", name, checkList[0], checkList[1], checkList[2], checkList[3], checkList[4], checkList[5], checkList[6], checkList[7]);
 
 
         }
@@ -170,6 +176,10 @@ public class AttendanceChecker {
     private String preprocessName(String value) {
         if (value.contains("(")) {
             value = value.substring(0, value.indexOf("("));
+        }
+
+        if (value.contains("_")) {
+            value = value.substring(0, value.indexOf("_"));
         }
 
         if (value.startsWith("풀")) {

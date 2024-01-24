@@ -63,6 +63,30 @@ class AttendanceCheckerTest {
     }
 
     @Test
+    @DisplayName("특수 케이스..1")
+    void specialSuit() {
+        List<ParticipantDto> people = new ArrayList<>();
+        ParticipantDto example = ParticipantDto.builder()
+                .name("박준수")
+                .joinTime(OffsetDateTime.parse("2024-01-23T00:52:04Z").toLocalDateTime())
+                .leaveTime(OffsetDateTime.parse("2024-01-23T05:42:16Z").toLocalDateTime())
+                .id("")
+                .build();
+        ParticipantDto example2 = ParticipantDto.builder()
+                .name("박준수_풀스택_3회차")
+                .joinTime(OffsetDateTime.parse("2024-01-23T09:40:04Z").toLocalDateTime())
+                .leaveTime(OffsetDateTime.parse("2024-01-23T09:51:16Z").toLocalDateTime())
+                .id("")
+                .build();
+        people.add(example);
+        people.add(example2);
+
+        Assertions.assertThat(attendanceChecker.attendanceCheck(people).get(0).getCheckList())
+                .isEqualTo(new Integer[]{1, 1, 1, 1, 1, 1, 1, 1});
+
+    }
+
+    @Test
     @DisplayName("정상 출결")
     void checkSuccessfulAttendance() {
 
