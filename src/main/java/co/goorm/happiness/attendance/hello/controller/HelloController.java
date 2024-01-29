@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -33,7 +35,7 @@ public class HelloController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/example")
-    public ResponseEntity<?> sendExample() throws JsonProcessingException {
+    public ResponseEntity<?> sendExample(){
         List<AttendanceCheckDto> people = new ArrayList<>();
         Integer[] example1;
         Integer[] example2;
@@ -250,7 +252,10 @@ public class HelloController {
                 .build());
 
 
-        return ResponseEntity.ok(new AttendanceResponse<>(200, 999, LocalDate.now(), people));
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
+                .body(people);
 
     }
 }
