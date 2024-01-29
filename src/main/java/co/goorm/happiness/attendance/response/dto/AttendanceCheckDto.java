@@ -24,17 +24,7 @@ public class AttendanceCheckDto {
 
     private Integer[] checkList = new Integer[8];
 
-    private long lastModified;
 
-    public AttendanceCheckDto(String id, String name, Integer[] checkList, String dateString) {
-        this.id = id;
-        this.name = name;
-        this.checkList = checkList;
-
-        LocalDate date = LocalDate.parse(dateString);
-        LocalDateTime dateTime = date.atStartOfDay();
-        this.lastModified = dateTime.toEpochSecond(ZoneOffset.UTC) * 1000;
-    }
 
 
 }

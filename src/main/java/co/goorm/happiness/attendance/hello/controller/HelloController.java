@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +36,13 @@ public class HelloController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/example")
-    public ResponseEntity<?> sendExample(){
+    public ResponseEntity<?> sendExample(ServletWebRequest request){
+
+        if (request.checkNotModified(1643347200000L)) {
+            return ResponseEntity.status(304).build();
+        }
+
+
         List<AttendanceCheckDto> people = new ArrayList<>();
         Integer[] example1;
         Integer[] example2;
@@ -251,16 +258,12 @@ public class HelloController {
                 .checkList(example2)
                 .build());
 
-        long maxLastModified = people.stream()
-                .mapToLong(AttendanceCheckDto::getLastModified)
-                .max()
-                .orElse(System.currentTimeMillis());
+
 
 
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
-                .lastModified(maxLastModified)
                 .body(people);
 
     }
