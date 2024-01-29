@@ -264,6 +264,7 @@ public class HelloController {
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
+                .eTag("aaaaa")
                 .body(people);
 
     }
