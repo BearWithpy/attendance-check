@@ -251,10 +251,16 @@ public class HelloController {
                 .checkList(example2)
                 .build());
 
+        long maxLastModified = people.stream()
+                .mapToLong(AttendanceCheckDto::getLastModified)
+                .max()
+                .orElse(System.currentTimeMillis());
+
 
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
+                .lastModified(maxLastModified)
                 .body(people);
 
     }
